@@ -1,18 +1,18 @@
 import { useState } from 'react';
-
-// styles
-// import styles from './TaskItem.module.css';
+import styles from './TaskItem.module.css';
 
 // Library imports
 import { CheckIcon  } from '@heroicons/react/24/outline';
 import { PencilSquareIcon  } from '@heroicons/react/24/outline';
 import { TrashIcon } from '@heroicons/react/24/outline';
 
-const TaskItem = ({task}) => {
+const TaskItem = ({task, deleteTask, toggleTask }) => {
   const [isChecked, setIsChecked ] = useState(task.checked);
 
   const handleCheckboxChange = (e) =>{
     setIsChecked(!isChecked);
+    toggleTask(task.id); // Notify parent to update task completion
+    // console.log('Checkbox is now:', !isChecked); 
   }
 
   return (
@@ -48,7 +48,7 @@ const TaskItem = ({task}) => {
         <button
           className={`btn ${styles.delete}`}
           aria-label={`Delete ${task.name} Task`}
-          // onClick={}
+          onClick={() => deleteTask(task.id)}
         >
           <TrashIcon width={24} height={24} />
         </button>

@@ -12,6 +12,18 @@ function App() {
     setTasks([...tasks, task]); // Add the new task to the existing tasks
   };
 
+  // Function added to delete tasks
+  const deleteTask = (id) => {
+    setTasks(prevState => prevState.filter(t => t.id !== id))
+  }
+
+  // Function to toggle the checked state of a task
+  const toggleTask = (id) => {
+    setTasks(prevState => prevState.map(t => (
+      t.id === id ? { ...t, checked: !t.checked } : t
+    )))
+  }
+
   return (
     <div className="container"> {/* Main container for the app */}
       <header> 
@@ -21,7 +33,7 @@ function App() {
       <CustomForm addTask={addTask} />
       
       {/* Conditionally render the TaskList component only if there are tasks */}
-      {tasks && <TaskList tasks={tasks} />}
+      {tasks && <TaskList tasks={tasks} deleteTask={deleteTask} toggleTask={toggleTask}/>}
     </div>
   );
 }
