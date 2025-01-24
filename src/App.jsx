@@ -1,41 +1,69 @@
-import { useState } from 'react'; // Importing useState hook from React
-import './App.css'; 
-import CustomForm from './components/CustomForm'; 
-import TaskList from './components/TaskList'; 
+import { useState } from "react"; 
+import "./App.css";
+import CustomForm from "./components/CustomForm"; 
+import TaskList from "./components/TaskList"; 
 
 function App() {
-  // Defining 'tasks' state to hold the list of tasks
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState([]); 
+  const [previousFocusEl, setPreviousFocusEl] = useState(null); // State to track previously focused element
+  const [editedTask, setEditedTask] = useState(null); // State for currently edited task
+  const [isEditing, setIsEditing] = useState(false); // State to check if in editing mode
 
-  // Function to add a new task to the 'tasks' state
-  const addTask = (task) => {
-    setTasks([...tasks, task]); // Add the new task to the existing tasks
+  const addTask = (task) => { 
+    setTasks([...tasks, task]); 
   };
 
-  // Function added to delete tasks
-  const deleteTask = (id) => {
-    setTasks(prevState => prevState.filter(t => t.id !== id))
-  }
+  const deleteTask = (id) => { 
+    setTasks((prevState) => prevState.filter((t) => t.id !== id));
+  };
 
-  // Function to toggle the checked state of a task
-  const toggleTask = (id) => {
-    setTasks(prevState => prevState.map(t => (
-      t.id === id ? { ...t, checked: !t.checked } : t
-    )))
-  }
+  const toggleTask = (id) => { 
+    setTasks((prevState) =>
+      prevState.map((t) => (t.id === id ? { ...t, checked: !t.checked } : t))
+    );
+  };
+
+  const updateTask = (task) => { 
+    setTasks((prevState) =>
+      prevState.map((t) => (t.id === task.id ? { ...t, name: task.name } : t))
+    );
+    closeEditMode(); 
+  };
+
+  const closeEditMode = () => { // Function to exit edit mode
+    setIsEditing(false);
+    previousFocusEl.focus(); // Restore focus to previous element
+  };
+
+  const enterEditMode = (task) => { 
+    setEditedTask(task);
+    setIsEditing(true);
+    setPreviousFocusEl(document.activeElement); // Save current focused element
+  };
 
   return (
-    <div className="container"> {/* Main container for the app */}
-      <header> 
+    <div className="container"> 
+      <header>
         <h1>My Task List</h1> 
       </header>
-      {/* Rendering the CustomForm component and passing 'addTask' function as a prop */}
-      <CustomForm addTask={addTask} />
-      
-      {/* Conditionally render the TaskList component only if there are tasks */}
-      {tasks && <TaskList tasks={tasks} deleteTask={deleteTask} toggleTask={toggleTask}/>}
+      {isEditing && ( 
+        <EditForm
+          editedTask={editedTask}
+          updateTask={updateTask}
+          closeEditMode={closeEditMode}
+        />
+      )}
+      <CustomForm addTask={addTask} /> {/* CustomForm for adding new tasks */}
+      {tasks && (
+        <TaskList
+          tasks={tasks}
+          deleteTask={deleteTask}
+          toggleTask={toggleTask}
+          enterEditMode={enterEditMode} // Passing task functions to TaskList
+        />
+      )}
     </div>
   );
 }
 
-export default App; 
+export default App;
