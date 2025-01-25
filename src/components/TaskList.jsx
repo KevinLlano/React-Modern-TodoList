@@ -1,21 +1,21 @@
 import TaskItem from './TaskItem';
 import styles from './TaskList.module.css';
 
-
-// TaskList component to display a list of tasks
-const TaskList = ({tasks, deleteTask, toggleTask}) => {
+const TaskList = ({ tasks, deleteTask, toggleTask, enterEditMode }) => {
   return (
     <ul className={styles.tasks}>
+      {/* Render sorted tasks */}
       {tasks.sort((a, b) => b.id - a.id).map(task => (
         <TaskItem
           key={task.id}
           task={task}
           deleteTask={deleteTask}
           toggleTask={toggleTask}
+          enterEditMode={enterEditMode}
         />
-      ))
-      }
+      ))}
     </ul>
-  )
-}
-export default TaskList
+  );
+};
+
+export default TaskList;

@@ -1,6 +1,7 @@
 import { useState } from "react"; 
 import "./App.css";
 import CustomForm from "./components/CustomForm"; 
+import EditForm from './components/EditForm'
 import TaskList from "./components/TaskList"; 
 
 function App() {
@@ -59,7 +60,7 @@ function App() {
           tasks={tasks}
           deleteTask={deleteTask}
           toggleTask={toggleTask}
-          enterEditMode={enterEditMode} // Passing task functions to TaskList
+          enterEditMode={enterEditMode} 
         />
       )}
     </div>
